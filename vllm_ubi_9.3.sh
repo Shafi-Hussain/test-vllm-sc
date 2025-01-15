@@ -1,5 +1,5 @@
 #!/bin/bash -e
-
+set -x
 # -----------------------------------------------------------------------------
 #
 # Package           : vllm
@@ -57,10 +57,7 @@ dnf install -y git cmake ninja-build rust cargo \
             python$PYTHON_VERSION-setuptools \
             python$PYTHON_VERSION-wheel
 
-export PATH=/opt/rh/gcc-toolset-13/root/bin:$PATH
-export LD_LIBRARY_PATH=/opt/rh/gcc-toolset-13/root/lib:/opt/rh/gcc-toolset-13/root/lib64:/usr/lib:/usr/lib64:$LD_LIBRARY_PATH
-export CC=$(command -v gcc)
-export CXX=$(command -v g++)
+source /opt/rh/gcc-toolset-13/enable
 
 if [ -z $PACKAGE_SOURCE_DIR ]; then
     git clone $PACKAGE_URL -b $PACKAGE_VERSION
@@ -87,7 +84,7 @@ pip install -q setuptools wheel build
 
 
 # Build Dependencies when BUILD_DEPS is unset or set to True
-if [ -z $BUILD_DEPS ] || [ $BUILD_DEPS == True]; then
+if [ -z $BUILD_DEPS ] || [ $BUILD_DEPS == True ]; then
 
     # setup
     DEPS_DIR=$WORKDIR/deps_from_src
